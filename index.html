@@ -4,200 +4,256 @@
 <meta charset="UTF-8">
 <title>Asistencia Orquestando</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 <style>
 body {
   font-family: Arial, sans-serif;
-  margin: 0;
-  background: url("fondo.jpg") no-repeat center center fixed;
-  background-size: cover;
-}
-
-header {
   text-align: center;
-  background: rgba(0,0,0,0.7);
+  background-image: url("fondo-orquestando.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+}
+
+.contenedor {
+  background: rgba(255,255,255,0.93);
+  max-width: 1200px;
+  margin: 30px auto;
   padding: 20px;
-  color: white;
+  border-radius: 15px;
 }
 
-header img {
-  max-width: 300px;
+.logo {
+  max-width: 320px;
+  margin: 10px auto;
 }
 
-.container {
-  width: 90%;
-  margin: auto;
-  margin-top: 20px;
-  background: rgba(255,255,255,0.95);
-  padding: 20px;
-  border-radius: 10px;
-}
-
-.botones {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 30px;
+select, input, button {
+  padding: 10px;
+  margin: 6px;
+  font-size: 14px;
 }
 
 button {
-  padding: 10px 15px;
-  font-size: 14px;
-  border: none;
-  border-radius: 6px;
   cursor: pointer;
 }
 
-button i {
-  margin-right: 5px;
-}
-
-.entrada { background: #4CAF50; color: white; }
-.salida { background: #f44336; color: white; }
-.ver { background: #2196F3; color: white; }
-.excel { background: #2e7d32; color: white; }
-.admin { background: #ff9800; color: black; }
-
-#calendario {
-  transform: scale(0.67);
-  transform-origin: top center;
-  margin-top: -120px;
-}
-
-.semana {
+.encabezado-semana, .semana {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
 }
 
+.encabezado-semana div {
+  font-weight: bold;
+  background: #ddd;
+  padding: 8px;
+  border: 1px solid #bbb;
+}
+
 .dia {
   border: 1px solid #ccc;
-  padding: 8px;
-  min-height: 80px;
+  min-height: 95px;
+  padding: 6px;
   font-size: 12px;
 }
 
-.sabado { background: #ffe0e0; }
-.domingo { background: #ffd6d6; }
+.fin-semana {
+  background: #ffe0e0;
+}
 
-.encabezado {
-  font-weight: bold;
-  text-align: center;
-  background: #ddd;
+.entrada {
+  border-left: 6px solid green;
+}
+
+.salida {
+  border-left: 6px solid blue;
+}
+
+/* ✅ CALENDARIO ESCALADO SIN SUPERPOSICIÓN */
+.calendario-wrapper {
+  transform: scale(0.67);
+  transform-origin: top center;
+  margin-top: 30px;     /* separación correcta */
+  padding-top: 20px;   /* evita que se monte */
 }
 </style>
 </head>
 
 <body>
+<div class="contenedor">
 
-<header>
-  <img src="logo.png" alt="Orquestando">
-  <h1>CICLO VACACIONAL ORQUESTANDO 2026</h1>
-</header>
+<img src="logo-orquestando.png" class="logo" alt="Orquestando">
 
-<div class="container">
+<h1>SISTEMA DE ASISTENCIA – ORQUESTANDO</h1>
 
+<!-- EDUCADORES -->
 <select id="educador">
-  <option value="">Seleccionar educador</option>
-  <option value="Elvis Ylla Uscamayta">Elvis Ylla Uscamayta</option>
-  <option value="Nilton Ibarra Vilchez">Nilton Ibarra Vilchez</option>
-  <option value="Hector Roberto Galvez Zuñiga">Hector Roberto Galvez Zuñiga</option>
+  <option value="">👤 Seleccione educador</option>
+  <option>Elvis Ylla Uscamayta</option>
+  <option>Nilton Ibarra Vilchez</option>
+  <option>Hector Roberto Galvez Zuñiga</option>
 </select>
 
-<input type="password" id="pin" placeholder="PIN de seguridad">
+<!-- PIN -->
+<input type="password" id="pin" placeholder="🔐 PIN 5 dígitos" maxlength="5">
 
-<div class="botones">
-  <button class="entrada" onclick="marcar('entrada')">
-    <i class="fa-solid fa-right-to-bracket"></i> Entrada
-  </button>
+<br>
 
-  <button class="salida" onclick="marcar('salida')">
-    <i class="fa-solid fa-right-from-bracket"></i> Salida
-  </button>
+<button onclick="marcar('entrada')">🟢 Entrada</button>
+<button onclick="marcar('salida')">🔵 Salida</button>
 
-  <button class="ver" onclick="verAsistencias()">
-    <i class="fa-solid fa-calendar-days"></i> Ver asistencias
-  </button>
+<hr>
 
-  <button class="excel" onclick="descargarExcel()">
-    <i class="fa-solid fa-file-excel"></i> Descargar Excel
-  </button>
+<select id="mes"></select>
+<select id="anio"></select>
 
-  <button class="admin" onclick="modoAdmin()">
-    <i class="fa-solid fa-gear"></i> Administrador
-  </button>
+<br>
+
+<button onclick="verAsistencias()">📅 Ver asistencias</button>
+<button onclick="descargarExcel()">📥 Descargar Excel</button>
+
+<!-- CALENDARIO -->
+<div class="calendario-wrapper">
+
+  <div class="encabezado-semana">
+    <div>SÁB</div>
+    <div>DOM</div>
+    <div>LUN</div>
+    <div>MAR</div>
+    <div>MIÉ</div>
+    <div>JUE</div>
+    <div>VIE</div>
+  </div>
+
+  <div id="calendario"></div>
+
 </div>
-
-<div id="calendario"></div>
 
 </div>
 
 <script>
+/* 🔐 PINES DEFINITIVOS */
 const pines = {
   "Elvis Ylla Uscamayta": "20261",
   "Nilton Ibarra Vilchez": "20262",
   "Hector Roberto Galvez Zuñiga": "20263"
 };
 
-let asistencias = JSON.parse(localStorage.getItem("asistencias")) || {};
-let admin = false;
+const mesSel = document.getElementById("mes");
+const anioSel = document.getElementById("anio");
+const educadorSel = document.getElementById("educador");
+const calendario = document.getElementById("calendario");
 
+/* MESES */
+["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"]
+.forEach((m,i)=>mesSel.innerHTML+=`<option value="${i}">${m}</option>`);
+
+/* AÑOS */
+for (let y = 2026; y <= 2035; y++) {
+  anioSel.innerHTML += `<option>${y}</option>`;
+}
+
+/* MARCAR ASISTENCIA */
 function marcar(tipo) {
-  const e = educador.value;
-  const p = pin.value;
-  if (!e || pines[e] !== p) {
-    alert("PIN incorrecto");
+  const educador = educadorSel.value;
+  const pin = document.getElementById("pin").value;
+
+  if (!educador) {
+    alert("Seleccione educador");
     return;
   }
-  const fecha = new Date().toISOString().slice(0,10);
-  if (!asistencias[e]) asistencias[e] = {};
-  if (!asistencias[e][fecha]) asistencias[e][fecha] = {};
-  asistencias[e][fecha][tipo] = new Date().toLocaleTimeString();
-  localStorage.setItem("asistencias", JSON.stringify(asistencias));
-  alert(tipo.toUpperCase() + " registrada");
+
+  if (pin !== pines[educador]) {
+    alert("❌ PIN incorrecto");
+    return;
+  }
+
+  const hoy = new Date();
+  const fecha = hoy.toISOString().split("T")[0];
+  const hora = hoy.toLocaleTimeString();
+
+  const key = `${educador}-${fecha}`;
+  const registro = JSON.parse(localStorage.getItem(key)) || {};
+  registro[tipo] = hora;
+  localStorage.setItem(key, JSON.stringify(registro));
+
+  alert(`✅ ${tipo.toUpperCase()} registrada`);
 }
 
+/* VER ASISTENCIAS */
 function verAsistencias() {
-  const cal = document.getElementById("calendario");
-  cal.innerHTML = "";
+  calendario.innerHTML = "";
+  const educador = educadorSel.value;
+  if (!educador) {
+    alert("Seleccione educador");
+    return;
+  }
 
-  const dias = ["Sábado","Domingo","Lunes","Martes","Miércoles","Jueves","Viernes"];
-  let fila = document.createElement("div");
-  fila.className = "semana";
+  const anio = anioSel.value;
+  const mes = mesSel.value;
 
-  dias.forEach(d => {
-    let div = document.createElement("div");
-    div.className = "dia encabezado";
-    div.innerText = d;
-    fila.appendChild(div);
-  });
+  const primerDia = new Date(anio, mes, 1);
+  const ultimoDia = new Date(anio, mes + 1, 0).getDate();
 
-  cal.appendChild(fila);
+  let inicio = (primerDia.getDay() + 1) % 7;
+  let semana = document.createElement("div");
+  semana.className = "semana";
+  calendario.appendChild(semana);
 
-  for (let i=1;i<=31;i++) {
-    let div = document.createElement("div");
+  for (let i = 0; i < inicio; i++) {
+    semana.appendChild(document.createElement("div"));
+  }
+
+  for (let d = 1; d <= ultimoDia; d++) {
+    const fecha = new Date(anio, mes, d);
+    const diaJS = fecha.getDay();
+    const diaSemana = (diaJS + 1) % 7;
+
+    if (diaSemana === 0 && d !== 1) {
+      semana = document.createElement("div");
+      semana.className = "semana";
+      calendario.appendChild(semana);
+    }
+
+    const key = `${educador}-${fecha.toISOString().split("T")[0]}`;
+    const r = JSON.parse(localStorage.getItem(key)) || {};
+
+    const div = document.createElement("div");
     div.className = "dia";
-    div.innerText = i;
-    cal.appendChild(div);
+
+    if (diaJS === 0 || diaJS === 6) div.classList.add("fin-semana");
+    if (r.entrada) div.classList.add("entrada");
+    if (r.salida) div.classList.add("salida");
+
+    div.innerHTML = `
+      <strong>${d}</strong><br>
+      ${r.entrada ? "🟢 " + r.entrada : ""}
+      ${r.salida ? "<br>🔵 " + r.salida : ""}
+    `;
+
+    semana.appendChild(div);
   }
 }
 
-function modoAdmin() {
-  admin = !admin;
-  alert(admin ? "Modo administrador activado" : "Modo administrador desactivado");
-}
-
+/* DESCARGAR EXCEL */
 function descargarExcel() {
   let csv = "Educador,Fecha,Entrada,Salida\n";
-  for (let e in asistencias) {
-    for (let f in asistencias[e]) {
-      csv += `${e},${f},${asistencias[e][f].entrada||""},${asistencias[e][f].salida||""}\n`;
-    }
-  }
-  const blob = new Blob([csv], {type:"text/csv"});
+
+  Object.keys(localStorage).forEach(k => {
+    if (!k.includes("-")) return;
+    const r = JSON.parse(localStorage[k]);
+    const partes = k.split("-");
+    const educador = partes.slice(0, partes.length - 1).join("-");
+    const fecha = partes[partes.length - 1];
+    csv += `${educador},${fecha},${r.entrada || ""},${r.salida || ""}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "asistencias.csv";
+  a.download = "asistencias_orquestando.csv";
   a.click();
 }
 </script>
