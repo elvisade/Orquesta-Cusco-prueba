@@ -225,24 +225,35 @@ button { cursor: pointer; }
     alert(`✅ ${tipo} registrada`);
   }
 
-  /* VER ASISTENCIAS */
+  /* VER ASISTENCIAS - CALENDARIO CORREGIDO */
   async function verAsistencias() {
     calendario.innerHTML = "";
     const educador = educadorSel.value;
     if (!educador) return alert("Seleccione educador");
 
-    const anio = anioSel.value;
-    const mes = mesSel.value;
+    const anio = parseInt(anioSel.value);
+    const mes = parseInt(mesSel.value);
+
     const snapshot = await db.collection("asistencias").get();
     const data = {};
     snapshot.forEach(doc => data[doc.id] = doc.data());
 
     const primerDia = new Date(anio, mes, 1);
-    const ultimoDia = new Date(anio, parseInt(mes)+1, 0).getDate();
+    const ultimoDia = new Date(anio, mes + 1, 0).getDate();
+
     let semana = document.createElement("div");
     semana.className = "semana";
     calendario.appendChild(semana);
 
+    // 🔹 Agregar divs vacíos antes del primer día
+    let diaSemana = primerDia.getDay(); // 0 = Domingo
+    for (let i = 0; i < diaSemana; i++) {
+      const vacio = document.createElement("div");
+      vacio.className = "dia";
+      semana.appendChild(vacio);
+    }
+
+    // 🔹 Agregar los días del mes
     for (let d = 1; d <= ultimoDia; d++) {
       const fecha = new Date(anio, mes, d);
       const key = `${educador}-${fecha.toISOString().split("T")[0]}`;
@@ -259,6 +270,13 @@ button { cursor: pointer; }
         ${r.salida ? "<br>🔵 "+r.salida : ""}`;
 
       semana.appendChild(div);
+
+      // 🔹 Crear nueva fila cada 7 días
+      if ((fecha.getDay() + 1) % 7 === 0 && d !== ultimoDia) {
+        semana = document.createElement("div");
+        semana.className = "semana";
+        calendario.appendChild(semana);
+      }
     }
   }
 
