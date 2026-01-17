@@ -180,7 +180,6 @@ button { cursor: pointer; }
     measurementId: "G-1QEC27KMPC"
   };
 
-  // Inicializar Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
@@ -245,8 +244,11 @@ button { cursor: pointer; }
     semana.className = "semana";
     calendario.appendChild(semana);
 
-    // 🔹 Agregar divs vacíos antes del primer día
-    let diaSemana = primerDia.getDay(); // 0 = Domingo
+    // 🔹 Ajuste para calendario que empieza en SÁB
+    let diaSemana = primerDia.getDay(); // 0=Domingo
+    diaSemana = (diaSemana + 2) % 7; // ahora sábado=0, jueves=5, etc.
+
+    // 🔹 Agregar celdas vacías antes del primer día
     for (let i = 0; i < diaSemana; i++) {
       const vacio = document.createElement("div");
       vacio.className = "dia";
@@ -271,8 +273,9 @@ button { cursor: pointer; }
 
       semana.appendChild(div);
 
-      // 🔹 Crear nueva fila cada 7 días
-      if ((fecha.getDay() + 1) % 7 === 0 && d !== ultimoDia) {
+      // 🔹 Crear nueva fila cada 7 días según calendario que empieza en SÁB
+      const diaCalendario = (fecha.getDay() + 2) % 7;
+      if (diaCalendario === 6 && d !== ultimoDia) {
         semana = document.createElement("div");
         semana.className = "semana";
         calendario.appendChild(semana);
